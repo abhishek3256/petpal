@@ -36,6 +36,11 @@ app.use('/api/daycare', daycareRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
+// Add a root route for a friendly landing page
+app.get('/', (req, res) => {
+  res.send('API Server is running. Use /api/* endpoints.');
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
