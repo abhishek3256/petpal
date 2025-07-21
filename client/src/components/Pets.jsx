@@ -14,6 +14,12 @@ const Pets = () => {
   const { user } = useAuth()
 
   useEffect(() => {
+    if (!user) {
+      window.location.href = '/login';
+    }
+  }, [user])
+
+  useEffect(() => {
     fetchPets()
   }, [])
 
@@ -31,10 +37,6 @@ const Pets = () => {
   const handlePurchase = async (petId) => {
     if (!user) {
       toast.error('Please login to purchase pets')
-      return
-    }
-    if (user.role !== 'buyer') {
-      toast.error('You are not a buyer. Register yourself as a buyer to purchase.')
       return
     }
     try {
@@ -258,6 +260,9 @@ const Pets = () => {
                     <p className="pet-detail">
                       <strong>Seller:</strong> {pet.seller?.fullName || 'N/A'}
                     </p>
+                  </div>
+                  <div style={{ marginBottom: 8, color: '#137547', fontWeight: 600 }}>
+                    Stock: {pet.stock ?? 1}
                   </div>
                   <div className="pet-description-container">
                     <p className={`pet-description ${expandedDescriptions[pet._id] ? 'expanded' : ''}`}>

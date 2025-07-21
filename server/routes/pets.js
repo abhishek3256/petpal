@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const pets = await Pet.find({ isAvailable: true }).populate('seller', 'fullName location');
+    // Show all pets, regardless of stock
+    const pets = await Pet.find().populate('seller', 'fullName location');
     res.json(pets);
   } catch (error) {
     console.error('Error fetching pets:', error);
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 
 router.post('/', auth, requireRole(['seller']), async (req, res) => {
   try {
-    const { name, type, breed, age, price, description, image } = req.body;
+    const { name, type, breed, age, price, description, image, stock } = req.body;
     
     const pet = new Pet({
       name,
@@ -26,6 +27,7 @@ router.post('/', auth, requireRole(['seller']), async (req, res) => {
       price,
       description,
       image,
+      stock,
       seller: req.user._id
     });
 
@@ -39,7 +41,7 @@ router.post('/', auth, requireRole(['seller']), async (req, res) => {
 
 router.post('/admin', auth, requireRole(['admin']), async (req, res) => {
   try {
-    const { name, type, breed, age, price, description, image } = req.body;
+    const { name, type, breed, age, price, description, image, stock } = req.body;
     
     const pet = new Pet({
       name,
@@ -49,6 +51,7 @@ router.post('/admin', auth, requireRole(['admin']), async (req, res) => {
       price,
       description,
       image,
+      stock,
       seller: req.user._id
     });
 

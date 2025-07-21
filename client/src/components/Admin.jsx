@@ -38,6 +38,10 @@ const Admin = () => {
   const [daycareAppointments, setDaycareAppointments] = useState([])
   const { user } = useAuth()
 
+  // Appointment editing state
+  const [editingAppointmentId, setEditingAppointmentId] = useState(null);
+  const [appointmentEditForm, setAppointmentEditForm] = useState({ appointmentDate: '', appointmentTime: '' });
+
   useEffect(() => {
     if (user?.role === 'admin') {
       fetchData()
@@ -277,6 +281,59 @@ const Admin = () => {
     }
   }
 
+  const handleDeleteOrder = async (orderId) => {
+    if (!window.confirm('Are you sure you want to delete this order?')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}`, { withCredentials: true });
+      toast.success('Order deleted successfully!');
+      fetchData();
+    } catch (error) {
+      toast.error('Failed to delete order');
+    }
+  };
+
+  const handleEditAppointment = (appt) => {
+    setEditingAppointmentId(appt._id);
+    setAppointmentEditForm({
+      appointmentDate: appt.appointmentDate ? new Date(appt.appointmentDate).toISOString().split('T')[0] : '',
+      appointmentTime: appt.appointmentTime || ''
+    });
+  };
+
+  const handleAppointmentEditChange = (e) => {
+    setAppointmentEditForm({
+      ...appointmentEditForm,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const saveAppointmentEdit = async (apptId) => {
+    try {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments/${apptId}`, appointmentEditForm, { withCredentials: true });
+      toast.success('Appointment updated!');
+      setEditingAppointmentId(null);
+      setAppointmentEditForm({ appointmentDate: '', appointmentTime: '' });
+      fetchVetAppointments();
+      fetchWalkerAppointments();
+      fetchDaycareAppointments();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update appointment');
+    }
+  };
+
+  const handleCancelAppointment = async (apptId) => {
+    if (!window.confirm('Are you sure you want to cancel this appointment?')) return;
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments/${apptId}`, { withCredentials: true });
+      toast.success('Appointment cancelled!');
+      fetchVetAppointments();
+      fetchWalkerAppointments();
+      fetchDaycareAppointments();
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cancel appointment');
+    }
+  };
+
   if (!user || user.role !== 'admin') {
     return (
       <div className="container">
@@ -341,10 +398,33 @@ const Admin = () => {
                   <div key={appt._id} className="card" style={{ minWidth: 220, margin: 8 }}>
                     <p><strong>Vet:</strong> {appt.vet?.fullName || 'N/A'}</p>
                     <p><strong>User:</strong> {appt.buyer?.fullName || 'N/A'}</p>
-                    <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
-                    <p><strong>Time:</strong> {appt.appointmentTime}</p>
-                    <p><strong>Status:</strong> {appt.status}</p>
-                    <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                    {editingAppointmentId === appt._id ? (
+                      <>
+                        <div className="form-group">
+                          <label>Date:</label>
+                          <input type="date" name="appointmentDate" value={appointmentEditForm.appointmentDate} onChange={handleAppointmentEditChange} />
+                        </div>
+                        <div className="form-group">
+                          <label>Time:</label>
+                          <input type="text" name="appointmentTime" value={appointmentEditForm.appointmentTime} onChange={handleAppointmentEditChange} placeholder="e.g. 10:00" />
+                        </div>
+                        <div className="flex" style={{ gap: 8 }}>
+                          <button className="btn btn-success" onClick={() => saveAppointmentEdit(appt._id)}>Save</button>
+                          <button className="btn btn-secondary" onClick={() => setEditingAppointmentId(null)}>Cancel</button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
+                        <p><strong>Time:</strong> {appt.appointmentTime}</p>
+                        <p><strong>Status:</strong> {appt.status}</p>
+                        <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                        <div className="flex" style={{ gap: 8, marginTop: 8 }}>
+                          <button className="btn btn-secondary" onClick={() => handleEditAppointment(appt)}>Edit</button>
+                          <button className="btn" style={{ backgroundColor: '#e17055' }} onClick={() => handleCancelAppointment(appt._id)}>Cancel Appointment</button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -356,10 +436,33 @@ const Admin = () => {
                   <div key={appt._id} className="card" style={{ minWidth: 220, margin: 8 }}>
                     <p><strong>Walker:</strong> {appt.walker?.fullName || 'N/A'}</p>
                     <p><strong>User:</strong> {appt.buyer?.fullName || 'N/A'}</p>
-                    <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
-                    <p><strong>Time:</strong> {appt.appointmentTime}</p>
-                    <p><strong>Status:</strong> {appt.status}</p>
-                    <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                    {editingAppointmentId === appt._id ? (
+                      <>
+                        <div className="form-group">
+                          <label>Date:</label>
+                          <input type="date" name="appointmentDate" value={appointmentEditForm.appointmentDate} onChange={handleAppointmentEditChange} />
+                        </div>
+                        <div className="form-group">
+                          <label>Time:</label>
+                          <input type="text" name="appointmentTime" value={appointmentEditForm.appointmentTime} onChange={handleAppointmentEditChange} placeholder="e.g. 10:00" />
+                        </div>
+                        <div className="flex" style={{ gap: 8 }}>
+                          <button className="btn btn-success" onClick={() => saveAppointmentEdit(appt._id)}>Save</button>
+                          <button className="btn btn-secondary" onClick={() => setEditingAppointmentId(null)}>Cancel</button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
+                        <p><strong>Time:</strong> {appt.appointmentTime}</p>
+                        <p><strong>Status:</strong> {appt.status}</p>
+                        <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                        <div className="flex" style={{ gap: 8, marginTop: 8 }}>
+                          <button className="btn btn-secondary" onClick={() => handleEditAppointment(appt)}>Edit</button>
+                          <button className="btn" style={{ backgroundColor: '#e17055' }} onClick={() => handleCancelAppointment(appt._id)}>Cancel Appointment</button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -371,10 +474,33 @@ const Admin = () => {
                   <div key={appt._id} className="card" style={{ minWidth: 220, margin: 8 }}>
                     <p><strong>Daycare:</strong> {appt.daycare?.fullName || 'N/A'}</p>
                     <p><strong>User:</strong> {appt.buyer?.fullName || 'N/A'}</p>
-                    <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
-                    <p><strong>Time:</strong> {appt.appointmentTime}</p>
-                    <p><strong>Status:</strong> {appt.status}</p>
-                    <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                    {editingAppointmentId === appt._id ? (
+                      <>
+                        <div className="form-group">
+                          <label>Date:</label>
+                          <input type="date" name="appointmentDate" value={appointmentEditForm.appointmentDate} onChange={handleAppointmentEditChange} />
+                        </div>
+                        <div className="form-group">
+                          <label>Time:</label>
+                          <input type="text" name="appointmentTime" value={appointmentEditForm.appointmentTime} onChange={handleAppointmentEditChange} placeholder="e.g. 10:00" />
+                        </div>
+                        <div className="flex" style={{ gap: 8 }}>
+                          <button className="btn btn-success" onClick={() => saveAppointmentEdit(appt._id)}>Save</button>
+                          <button className="btn btn-secondary" onClick={() => setEditingAppointmentId(null)}>Cancel</button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p><strong>Date:</strong> {new Date(appt.appointmentDate).toLocaleDateString()}</p>
+                        <p><strong>Time:</strong> {appt.appointmentTime}</p>
+                        <p><strong>Status:</strong> {appt.status}</p>
+                        <p><strong>Contact:</strong> {appt.buyer?.contactNumber || 'N/A'}</p>
+                        <div className="flex" style={{ gap: 8, marginTop: 8 }}>
+                          <button className="btn btn-secondary" onClick={() => handleEditAppointment(appt)}>Edit</button>
+                          <button className="btn" style={{ backgroundColor: '#e17055' }} onClick={() => handleCancelAppointment(appt._id)}>Cancel Appointment</button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -517,7 +643,7 @@ const Admin = () => {
         <div className="gradient-aqua-pink" style={{ borderRadius: 16, padding: 24 }}>
           <h2>Order Management</h2>
           <div className="grid">
-            {orders.map((order) => (
+            {orders.filter(order => order.type === 'pet' || order.type === 'accessory').map((order) => (
               <div key={order._id} className="card">
                 <h3>Order #{order._id.slice(-6)}</h3>
                 <p><strong>Type:</strong> {order.type}</p>
@@ -531,7 +657,6 @@ const Admin = () => {
                 {order.appointmentTime && (
                   <p><strong>Time:</strong> {order.appointmentTime}</p>
                 )}
-                
                 <div style={{ marginTop: '15px' }}>
                   <select
                     value={order.status}
@@ -544,6 +669,13 @@ const Admin = () => {
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
                   </select>
+                 <button
+                   className="btn"
+                   style={{ backgroundColor: '#e17055', marginLeft: 10 }}
+                   onClick={() => handleDeleteOrder(order._id)}
+                 >
+                   Delete Order
+                 </button>
                 </div>
               </div>
             ))}

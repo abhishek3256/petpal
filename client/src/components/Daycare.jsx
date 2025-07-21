@@ -85,106 +85,94 @@ const Daycare = () => {
       <p className="section-subtitle">Safe and caring daycare services for your pets</p>
       
       <div className="grid">
-        {daycares.map((daycare, idx) => (
-          <div key={daycare._id} className="card" style={{ position: 'relative' }}>
-            <img
-              src={daycare.image || defaultImages.user}
-              alt={daycare.fullName}
-              style={{
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                marginBottom: '15px'
-              }}
-            />
-            
-            <h3>{daycare.fullName}</h3>
-            <p><strong>Age:</strong> {daycare.age} years</p>
-            <p><strong>Sex:</strong> {daycare.sex}</p>
-            <p><strong>Location:</strong> {daycare.location}</p>
-            <p><strong>Rate:</strong> ₹{daycare.hourlyRate}/hour</p>
-            
-            <div style={{ marginTop: '15px' }}>
-              <button
-                onClick={() => openBookingForm(daycare, idx)}
-                className="btn btn-secondary"
-              >
-                Book Daycare
-              </button>
-            </div>
-            {showBookingForm && selectedDaycare && selectedDaycare._id === daycare._id && (
-              <div
-                className="card floating-booking-form"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  [bookingAnchorIndex === daycares.length - 1 ? 'right' : 'left']: '105%',
-                  zIndex: 10,
-                  width: 320,
-                  minWidth: 220,
-                  maxWidth: '90vw',
-                  boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
-                  background: '#fff',
-                  marginLeft: bookingAnchorIndex === daycares.length - 1 ? undefined : 12,
-                  marginRight: bookingAnchorIndex === daycares.length - 1 ? 12 : undefined
-                }}
-              >
-                <h3>Book Daycare with {selectedDaycare.fullName}</h3>
-                <p><strong>Rate:</strong> ₹{selectedDaycare.hourlyRate}/hour</p>
-                <form onSubmit={handleBookDaycare}>
-                  <div className="form-group">
-                    <label htmlFor="appointmentDate">Daycare Date</label>
-                    <input
-                      type="date"
-                      id="appointmentDate"
-                      name="appointmentDate"
-                      value={bookingData.appointmentDate}
-                      onChange={(e) => setBookingData({
-                        ...bookingData,
-                        appointmentDate: e.target.value
-                      })}
-                      required
-                      min={new Date().toISOString().split('T')[0]}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="appointmentTime">Drop-off Time</label>
-                    <select
-                      id="appointmentTime"
-                      name="appointmentTime"
-                      value={bookingData.appointmentTime}
-                      onChange={(e) => setBookingData({
-                        ...bookingData,
-                        appointmentTime: e.target.value
-                      })}
-                      required
-                    >
-                      <option value="">Select Time</option>
-                      <option value="08:00">08:00 AM</option>
-                      <option value="09:00">09:00 AM</option>
-                      <option value="10:00">10:00 AM</option>
-                      <option value="11:00">11:00 AM</option>
-                      <option value="12:00">12:00 PM</option>
-                    </select>
-                  </div>
-                  <div className="flex" style={{ gap: '10px' }}>
-                    <button type="submit" className="btn btn-success">
-                      Book Daycare
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowBookingForm(false)}
-                      className="btn btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
+        {daycares.map((daycare, idx) => {
+          const isOpen = showBookingForm && selectedDaycare && selectedDaycare._id === daycare._id;
+          return (
+            <div key={daycare._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+              <div className="card" style={{ position: 'relative', marginBottom: 16 }}>
+                <img
+                  src={daycare.image || defaultImages.user}
+                  alt={daycare.fullName}
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginBottom: '15px'
+                  }}
+                />
+                <h3>{daycare.fullName}</h3>
+                <p><strong>Age:</strong> {daycare.age} years</p>
+                <p><strong>Sex:</strong> {daycare.sex}</p>
+                <p><strong>Location:</strong> {daycare.location}</p>
+                <p><strong>Rate:</strong> ₹{daycare.hourlyRate}/hour</p>
+                <div style={{ marginTop: '15px' }}>
+                  <button
+                    onClick={() => openBookingForm(daycare, idx)}
+                    className="btn btn-secondary"
+                  >
+                    Book Daycare
+                  </button>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+              {isOpen && (
+                <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                  <h3>Book Daycare with {daycare.fullName}</h3>
+                  <p><strong>Rate:</strong> ₹{daycare.hourlyRate}/hour</p>
+                  <form onSubmit={handleBookDaycare}>
+                    <div className="form-group">
+                      <label htmlFor="appointmentDate">Daycare Date</label>
+                      <input
+                        type="date"
+                        id="appointmentDate"
+                        name="appointmentDate"
+                        value={bookingData.appointmentDate}
+                        onChange={(e) => setBookingData({
+                          ...bookingData,
+                          appointmentDate: e.target.value
+                        })}
+                        required
+                        min={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="appointmentTime">Drop-off Time</label>
+                      <select
+                        id="appointmentTime"
+                        name="appointmentTime"
+                        value={bookingData.appointmentTime}
+                        onChange={(e) => setBookingData({
+                          ...bookingData,
+                          appointmentTime: e.target.value
+                        })}
+                        required
+                      >
+                        <option value="">Select Time</option>
+                        <option value="08:00">08:00 AM</option>
+                        <option value="09:00">09:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                      </select>
+                    </div>
+                    <div className="flex" style={{ gap: '10px' }}>
+                      <button type="submit" className="btn btn-success">
+                        Book Daycare
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowBookingForm(false)}
+                        className="btn btn-secondary"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
       
       {daycares.length === 0 && (

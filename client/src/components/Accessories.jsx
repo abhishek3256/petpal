@@ -32,18 +32,18 @@ const Accessories = () => {
       toast.error('Please login to purchase accessories')
       return
     }
-    if (user.role !== 'buyer') {
-      toast.error('You are not a buyer. Register yourself as a buyer to purchase.')
-      return
-    }
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/accessory`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/accessory`, {
         accessoryId
       }, {
         withCredentials: true
       })
-      toast.success('Accessory purchased successfully!')
-      fetchAccessories()
+      if (response.status === 201) {
+        toast.success('Accessory purchased successfully!')
+        fetchAccessories()
+      } else {
+        toast.error(response.data?.message || 'Purchase failed')
+      }
     } catch (error) {
       toast.error(error.response?.data?.message || 'Purchase failed')
     }

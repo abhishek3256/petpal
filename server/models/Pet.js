@@ -21,6 +21,11 @@ const petSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  stock: {
+    type: Number,
+    default: 1,
+    min: 0
+  },
   description: {
     type: String,
     required: true
@@ -33,10 +38,6 @@ const petSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  },
-  isAvailable: {
-    type: Boolean,
-    default: true
   }
 }, {
   timestamps: true

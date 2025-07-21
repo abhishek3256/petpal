@@ -85,108 +85,96 @@ const Walkers = () => {
       <p className="section-subtitle">Professional pet walking services</p>
       
       <div className="grid">
-        {walkers.map((walker, idx) => (
-          <div key={walker._id} className="card" style={{ position: 'relative' }}>
-            <img
-              src={walker.image || defaultImages.user}
-              alt={walker.fullName}
-              style={{
-                width: '100px',
-                height: '100px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                marginBottom: '15px'
-              }}
-            />
-            
-            <h3>{walker.fullName}</h3>
-            <p><strong>Age:</strong> {walker.age} years</p>
-            <p><strong>Sex:</strong> {walker.sex}</p>
-            <p><strong>Location:</strong> {walker.location}</p>
-            <p><strong>Rate:</strong> ₹{walker.hourlyRate}/hour</p>
-            
-            <div style={{ marginTop: '15px' }}>
-              <button
-                onClick={() => openHiringForm(walker, idx)}
-                className="btn btn-secondary"
-              >
-                Hire Walker
-              </button>
-            </div>
-            {showHiringForm && selectedWalker && selectedWalker._id === walker._id && (
-              <div
-                className="card floating-hiring-form"
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  [hiringAnchorIndex === walkers.length - 1 ? 'right' : 'left']: '105%',
-                  zIndex: 10,
-                  width: 320,
-                  minWidth: 220,
-                  maxWidth: '90vw',
-                  boxShadow: '0 2px 16px rgba(0,0,0,0.15)',
-                  background: '#fff',
-                  marginLeft: hiringAnchorIndex === walkers.length - 1 ? undefined : 12,
-                  marginRight: hiringAnchorIndex === walkers.length - 1 ? 12 : undefined
-                }}
-              >
-                <h3>Hire {selectedWalker.fullName}</h3>
-                <p><strong>Rate:</strong> ₹{selectedWalker.hourlyRate}/hour</p>
-                <form onSubmit={handleHireWalker}>
-                  <div className="form-group">
-                    <label htmlFor="appointmentDate">Walking Date</label>
-                    <input
-                      type="date"
-                      id="appointmentDate"
-                      name="appointmentDate"
-                      value={hiringData.appointmentDate}
-                      onChange={(e) => setHiringData({
-                        ...hiringData,
-                        appointmentDate: e.target.value
-                      })}
-                      required
-                      min={new Date().toISOString().split('T')[0]}
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="appointmentTime">Walking Time</label>
-                    <select
-                      id="appointmentTime"
-                      name="appointmentTime"
-                      value={hiringData.appointmentTime}
-                      onChange={(e) => setHiringData({
-                        ...hiringData,
-                        appointmentTime: e.target.value
-                      })}
-                      required
-                    >
-                      <option value="">Select Time</option>
-                      <option value="06:00">06:00 AM</option>
-                      <option value="07:00">07:00 AM</option>
-                      <option value="08:00">08:00 AM</option>
-                      <option value="17:00">05:00 PM</option>
-                      <option value="18:00">06:00 PM</option>
-                      <option value="19:00">07:00 PM</option>
-                      <option value="20:00">08:00 PM</option>
-                    </select>
-                  </div>
-                  <div className="flex" style={{ gap: '10px' }}>
-                    <button type="submit" className="btn btn-success">
-                      Hire Walker
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowHiringForm(false)}
-                      className="btn btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
+        {walkers.map((walker, idx) => {
+          const isOpen = showHiringForm && selectedWalker && selectedWalker._id === walker._id;
+          return (
+            <div key={walker._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
+              <div className="card" style={{ position: 'relative', marginBottom: 16 }}>
+                <img
+                  src={walker.image || defaultImages.user}
+                  alt={walker.fullName}
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginBottom: '15px'
+                  }}
+                />
+                <h3>{walker.fullName}</h3>
+                <p><strong>Age:</strong> {walker.age} years</p>
+                <p><strong>Sex:</strong> {walker.sex}</p>
+                <p><strong>Location:</strong> {walker.location}</p>
+                <p><strong>Rate:</strong> ₹{walker.hourlyRate}/hour</p>
+                <div style={{ marginTop: '15px' }}>
+                  <button
+                    onClick={() => openHiringForm(walker, idx)}
+                    className="btn btn-secondary"
+                  >
+                    Hire Walker
+                  </button>
+                </div>
               </div>
-            )}
-          </div>
-        ))}
+              {isOpen && (
+                <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                  <h3>Hire {walker.fullName}</h3>
+                  <p><strong>Rate:</strong> ₹{walker.hourlyRate}/hour</p>
+                  <form onSubmit={handleHireWalker}>
+                    <div className="form-group">
+                      <label htmlFor="appointmentDate">Walking Date</label>
+                      <input
+                        type="date"
+                        id="appointmentDate"
+                        name="appointmentDate"
+                        value={hiringData.appointmentDate}
+                        onChange={(e) => setHiringData({
+                          ...hiringData,
+                          appointmentDate: e.target.value
+                        })}
+                        required
+                        min={new Date().toISOString().split('T')[0]}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="appointmentTime">Walking Time</label>
+                      <select
+                        id="appointmentTime"
+                        name="appointmentTime"
+                        value={hiringData.appointmentTime}
+                        onChange={(e) => setHiringData({
+                          ...hiringData,
+                          appointmentTime: e.target.value
+                        })}
+                        required
+                      >
+                        <option value="">Select Time</option>
+                        <option value="06:00">06:00 AM</option>
+                        <option value="07:00">07:00 AM</option>
+                        <option value="08:00">08:00 AM</option>
+                        <option value="17:00">05:00 PM</option>
+                        <option value="18:00">06:00 PM</option>
+                        <option value="19:00">07:00 PM</option>
+                        <option value="20:00">08:00 PM</option>
+                      </select>
+                    </div>
+                    <div className="flex" style={{ gap: '10px' }}>
+                      <button type="submit" className="btn btn-success">
+                        Hire Walker
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowHiringForm(false)}
+                        className="btn btn-secondary"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
       
       {walkers.length === 0 && (

@@ -12,6 +12,8 @@ import Login from './components/Login'
 import Register from './components/Register'
 import Admin from './components/Admin'
 import Profile from './components/Profile'
+import Orders from './components/Orders'
+import Appointments from './components/Appointments'
 import './App.css'
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/appointments" element={<Appointments />} />
           </Routes>
         </main>
       </div>

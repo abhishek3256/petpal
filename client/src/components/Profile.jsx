@@ -10,10 +10,13 @@ const Profile = () => {
   const [form, setForm] = useState({})
   const [loading, setLoading] = useState(false)
   const [appointments, setAppointments] = useState([])
+  const [orders, setOrders] = useState([])
+  const [ordersLoading, setOrdersLoading] = useState(false)
 
   useEffect(() => {
     if (user) setForm({ ...user })
     if (user && ['vet', 'walker', 'daycare'].includes(user.role)) fetchAppointments()
+    if (user) fetchOrders()
     // eslint-disable-next-line
   }, [user])
 
@@ -25,6 +28,18 @@ const Profile = () => {
     } catch {}
   }
 
+  const fetchOrders = async () => {
+    setOrdersLoading(true)
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/my-orders`, { withCredentials: true })
+      setOrders(res.data)
+    } catch (error) {
+      toast.error('Failed to fetch your orders')
+    } finally {
+      setOrdersLoading(false)
+    }
+  }
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -32,7 +47,8 @@ const Profile = () => {
   const handleSave = async () => {
     setLoading(true)
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/auth/users/${user._id}`, form, { withCredentials: true })
+      // If editing own profile, use /auth/me
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, form, { withCredentials: true })
       toast.success('Profile updated!')
       setEditMode(false)
       checkAuth()
@@ -42,6 +58,18 @@ const Profile = () => {
       setLoading(false)
     }
   }
+
+  const getOrderItemDetails = (order) => {
+    if (!order.item) return { name: 'N/A', image: '', extra: '' };
+    if (order.type === 'pet') {
+      return { name: order.item.name, image: order.item.image, extra: order.item.breed ? `Breed: ${order.item.breed}` : '' };
+    }
+    if (order.type === 'accessory') {
+      return { name: order.item.name, image: order.item.image, extra: order.item.animalType ? `For: ${order.item.animalType}` : '' };
+    }
+    // For services (vet, walker, daycare)
+    return { name: order.item.fullName, image: order.item.image, extra: order.type.charAt(0).toUpperCase() + order.type.slice(1) };
+  };
 
   if (!user) return <div className="container"><div className="card text-center">Please login to view your profile.</div></div>
 

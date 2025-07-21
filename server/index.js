@@ -11,6 +11,7 @@ const vetRoutes = require('./routes/vets');
 const walkerRoutes = require('./routes/walkers');
 const daycareRoutes = require('./routes/daycare');
 const orderRoutes = require('./routes/orders');
+const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api/vets', vetRoutes);
 app.use('/api/walkers', walkerRoutes);
 app.use('/api/daycare', daycareRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -4,16 +4,40 @@ import { socialLinks, handleSocialClick } from '../utils/socialLinks'
 import { useState, useEffect, useRef } from 'react'
 import { defaultImages } from '../utils/imageLinks'
 
+const dropdownBtnStyle = {
+  width: '100%',
+  padding: '12px 18px',
+  background: 'linear-gradient(90deg, #c2e9fb 0%, #a1c4fd 100%)',
+  border: 'none',
+  textAlign: 'left',
+  cursor: 'pointer',
+  fontWeight: 700,
+  color: '#137547',
+  borderRadius: 8,
+  marginBottom: 6,
+  fontSize: 16,
+  transition: 'background 0.2s, color 0.2s',
+}
+const dropdownBtnHoverStyle = {
+  background: 'linear-gradient(90deg, #a1c4fd 0%, #c2e9fb 100%)',
+  color: '#fff',
+}
+
 const Navbar = () => {
   const { user, logout } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const [showServicesMenu, setShowServicesMenu] = useState(false)
   const profileMenuRef = useRef()
   const profileBtnRef = useRef()
+  const servicesMenuRef = useRef()
+  const servicesBtnRef = useRef()
+  // For hover effect, track hovered button
+  const [hoveredBtn, setHoveredBtn] = useState('')
 
   useEffect(() => {
-    if (!showProfileMenu) return
+    if (!showProfileMenu) return;
     const handleClick = (e) => {
       if (
         profileMenuRef.current &&
@@ -21,12 +45,29 @@ const Navbar = () => {
         profileBtnRef.current &&
         !profileBtnRef.current.contains(e.target)
       ) {
-        setShowProfileMenu(false)
+        setShowProfileMenu(false);
       }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [showProfileMenu])
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showProfileMenu]);
+
+  // Add click outside handler for Services dropdown
+  useEffect(() => {
+    if (!showServicesMenu) return;
+    const handleClick = (e) => {
+      if (
+        servicesMenuRef.current &&
+        !servicesMenuRef.current.contains(e.target) &&
+        servicesBtnRef.current &&
+        !servicesBtnRef.current.contains(e.target)
+      ) {
+        setShowServicesMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showServicesMenu]);
 
   return (
     <nav className="navbar">
@@ -51,20 +92,50 @@ const Navbar = () => {
                 Accessories
               </Link>
             </li>
-            <li>
-              <Link to="/vets" className={location.pathname === '/vets' ? 'active' : ''}>
-                Vets
-              </Link>
-            </li>
-            <li>
-              <Link to="/walkers" className={location.pathname === '/walkers' ? 'active' : ''}>
-                Walkers
-              </Link>
-            </li>
-            <li>
-              <Link to="/daycare" className={location.pathname === '/daycare' ? 'active' : ''}>
-                Daycare
-              </Link>
+            <li style={{ position: 'relative' }}>
+              <button
+                ref={servicesBtnRef}
+                className="btn btn-secondary"
+                style={{ fontWeight: 500, background: 'none', border: 'none', cursor: 'pointer', color: location.pathname.startsWith('/vets') || location.pathname.startsWith('/walkers') || location.pathname.startsWith('/daycare') ? '#137547' : undefined }}
+                onClick={() => setShowServicesMenu((v) => !v)}
+              >
+                Services
+              </button>
+              {showServicesMenu && (
+                <div
+                  ref={servicesMenuRef}
+                  className="services-dropdown"
+                  style={{ position: 'absolute', left: 0, top: 40, background: '#fff', boxShadow: '0 2px 12px rgba(0,0,0,0.12)', borderRadius: 8, minWidth: 160, zIndex: 100, padding: 8 }}
+                >
+                  <button
+                    className="profile-dropdown-btn"
+                    style={hoveredBtn === 'vet' ? { ...dropdownBtnStyle, ...dropdownBtnHoverStyle } : dropdownBtnStyle}
+                    onMouseEnter={() => setHoveredBtn('vet')}
+                    onMouseLeave={() => setHoveredBtn('')}
+                    onClick={() => { setShowServicesMenu(false); navigate('/vets') }}
+                  >
+                    Vet
+                  </button>
+                  <button
+                    className="profile-dropdown-btn"
+                    style={hoveredBtn === 'walker' ? { ...dropdownBtnStyle, ...dropdownBtnHoverStyle } : dropdownBtnStyle}
+                    onMouseEnter={() => setHoveredBtn('walker')}
+                    onMouseLeave={() => setHoveredBtn('')}
+                    onClick={() => { setShowServicesMenu(false); navigate('/walkers') }}
+                  >
+                    Walker
+                  </button>
+                  <button
+                    className="profile-dropdown-btn"
+                    style={hoveredBtn === 'daycare' ? { ...dropdownBtnStyle, ...dropdownBtnHoverStyle } : dropdownBtnStyle}
+                    onMouseEnter={() => setHoveredBtn('daycare')}
+                    onMouseLeave={() => setHoveredBtn('')}
+                    onClick={() => { setShowServicesMenu(false); navigate('/daycare') }}
+                  >
+                    Daycare
+                  </button>
+                </div>
+              )}
             </li>
             {user?.role === 'seller' && (
               <li>
@@ -77,6 +148,13 @@ const Navbar = () => {
               <li>
                 <Link to="/admin" className={location.pathname === '/admin' ? 'active' : ''}>
                   Admin
+                </Link>
+              </li>
+            )}
+            {user && (
+              <li>
+                <Link to="/orders" className={location.pathname === '/orders' ? 'active' : ''}>
+                  My Orders
                 </Link>
               </li>
             )}
@@ -104,14 +182,18 @@ const Navbar = () => {
                 >
                   <button
                     className="profile-dropdown-btn"
-                    style={{ width: '100%', padding: '10px 16px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer' }}
+                    style={hoveredBtn === 'profile' ? { ...dropdownBtnStyle, ...dropdownBtnHoverStyle } : dropdownBtnStyle}
+                    onMouseEnter={() => setHoveredBtn('profile')}
+                    onMouseLeave={() => setHoveredBtn('')}
                     onClick={() => { setShowProfileMenu(false); navigate('/profile') }}
                   >
                     Profile
                   </button>
                   <button
                     className="profile-dropdown-btn"
-                    style={{ width: '100%', padding: '10px 16px', background: 'none', border: 'none', textAlign: 'left', cursor: 'pointer', color: '#e17055' }}
+                    style={hoveredBtn === 'signout' ? { ...dropdownBtnStyle, ...dropdownBtnHoverStyle } : dropdownBtnStyle}
+                    onMouseEnter={() => setHoveredBtn('signout')}
+                    onMouseLeave={() => setHoveredBtn('')}
                     onClick={async () => { setShowProfileMenu(false); await logout(); }}
                   >
                     Sign Out
