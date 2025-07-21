@@ -14,19 +14,23 @@ const orderRoutes = require('./routes/orders');
 const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
-const allowedOrigins = [
-  'https://petpal-3zse.vercel.app',
-  'http://localhost:5173'
-];
+// const allowedOrigins = [
+//   'https://petpal-3zse.vercel.app',
+//   'http://localhost:5173'
+// ];
 
+// app.use(cors({
+//   origin: function(origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+//   credentials: true
+// }));
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 
