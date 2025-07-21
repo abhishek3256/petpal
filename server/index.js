@@ -16,7 +16,7 @@ const appointmentRoutes = require('./routes/appointments');
 const app = express();
 
 app.use(cors({
-  origin: process.env.VITE_API_BASE_URL,
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }));
 
