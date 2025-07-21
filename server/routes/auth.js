@@ -1,17 +1,19 @@
-import express from 'express';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import { auth, requireRole } from '../middleware/auth.js';
+const express = require('express');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { auth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
   try {
     const { email, password, fullName, age, sex, location, role, hourlyRate, image, contactNumber } = req.body;
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists.' });
     }
+
     const user = new User({
       email,
       password,
@@ -24,13 +26,17 @@ router.post('/register', async (req, res) => {
       image,
       contactNumber: contactNumber || ''
     });
+
     await user.save();
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
+
     res.status(201).json({
       message: 'User registered successfully',
       user: {
@@ -49,20 +55,25 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
+
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
+
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
+
     res.json({
       message: 'Login successful',
       user: {
@@ -107,6 +118,7 @@ router.get('/users', auth, requireRole(['admin']), async (req, res) => {
   }
 });
 
+// Admin can edit any user
 router.put('/users/:id', auth, requireRole(['admin']), async (req, res) => {
   try {
     const { fullName, email, age, sex, location, role, hourlyRate, image, contactNumber, isActive } = req.body;
@@ -131,6 +143,7 @@ router.put('/users/:id', auth, requireRole(['admin']), async (req, res) => {
   }
 });
 
+// Allow users to update their own profile
 router.put('/me', auth, async (req, res) => {
   try {
     const { fullName, email, age, sex, location, hourlyRate, image, contactNumber } = req.body;
@@ -153,4 +166,4 @@ router.put('/me', auth, async (req, res) => {
   }
 });
 
-export default router; 
+module.exports = router; 

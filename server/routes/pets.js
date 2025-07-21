@@ -1,14 +1,16 @@
-import express from 'express';
-import Pet from '../models/Pet.js';
-import { auth, requireRole } from '../middleware/auth.js';
+const express = require('express');
+const Pet = require('../models/Pet');
+const { auth, requireRole } = require('../middleware/auth');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
+    // Show all pets, regardless of stock
     const pets = await Pet.find().populate('seller', 'fullName location');
     res.json(pets);
   } catch (error) {
+    console.error('Error fetching pets:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
@@ -16,6 +18,7 @@ router.get('/', async (req, res) => {
 router.post('/', auth, requireRole(['seller']), async (req, res) => {
   try {
     const { name, type, breed, age, price, description, image, stock } = req.body;
+    
     const pet = new Pet({
       name,
       type,
@@ -27,9 +30,11 @@ router.post('/', auth, requireRole(['seller']), async (req, res) => {
       stock,
       seller: req.user._id
     });
+
     await pet.save();
     res.status(201).json(pet);
   } catch (error) {
+    console.error('Error adding pet:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
@@ -37,6 +42,7 @@ router.post('/', auth, requireRole(['seller']), async (req, res) => {
 router.post('/admin', auth, requireRole(['admin']), async (req, res) => {
   try {
     const { name, type, breed, age, price, description, image, stock } = req.body;
+    
     const pet = new Pet({
       name,
       type,
@@ -48,9 +54,11 @@ router.post('/admin', auth, requireRole(['admin']), async (req, res) => {
       stock,
       seller: req.user._id
     });
+
     await pet.save();
     res.status(201).json(pet);
   } catch (error) {
+    console.error('Error adding pet as admin:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
@@ -60,6 +68,7 @@ router.get('/my-pets', auth, requireRole(['seller']), async (req, res) => {
     const pets = await Pet.find({ seller: req.user._id });
     res.json(pets);
   } catch (error) {
+    console.error('Error fetching my pets:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
@@ -81,6 +90,7 @@ router.put('/:id', auth, requireRole(['seller', 'admin']), async (req, res) => {
     }
     res.json(pet);
   } catch (error) {
+    console.error('Error updating pet:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
@@ -93,13 +103,16 @@ router.delete('/:id', auth, requireRole(['seller', 'admin']), async (req, res) =
     } else {
       pet = await Pet.findOneAndDelete({ _id: req.params.id, seller: req.user._id });
     }
+    
     if (!pet) {
       return res.status(404).json({ message: 'Pet not found.' });
     }
+    
     res.json({ message: 'Pet deleted successfully.' });
   } catch (error) {
+    console.error('Error deleting pet:', error);
     res.status(500).json({ message: 'Server error.' });
   }
 });
 
-export default router; 
+module.exports = router; 

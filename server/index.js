@@ -1,27 +1,25 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
-dotenv.config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+require('dotenv').config();
 
-import authRoutes from './routes/auth.js';
-import petRoutes from './routes/pets.js';
-import accessoryRoutes from './routes/accessories.js';
-import vetRoutes from './routes/vets.js';
-import walkerRoutes from './routes/walkers.js';
-import daycareRoutes from './routes/daycare.js';
-import orderRoutes from './routes/orders.js';
-import appointmentRoutes from './routes/appointments.js';
+const authRoutes = require('./routes/auth');
+const petRoutes = require('./routes/pets');
+const accessoryRoutes = require('./routes/accessories');
+const vetRoutes = require('./routes/vets');
+const walkerRoutes = require('./routes/walkers');
+const daycareRoutes = require('./routes/daycare');
+const orderRoutes = require('./routes/orders');
+const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
+//hello
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://petpal-3zse.vercel.app'
-  ],
+  origin: 'http://localhost:5173',
   credentials: true
 }));
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -37,10 +35,6 @@ app.use('/api/walkers', walkerRoutes);
 app.use('/api/daycare', daycareRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/appointments', appointmentRoutes);
-
-app.get('/', (req, res) => {
-  res.send('API Server is running. Use /api/* endpoints.');
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

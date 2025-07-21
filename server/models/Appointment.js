@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
   buyer: {
@@ -24,6 +24,11 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+    default: 'pending'
+  },
   notes: {
     type: String
   }
@@ -31,5 +36,4 @@ const appointmentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Appointment = mongoose.model('Appointment', appointmentSchema);
-export default Appointment; 
+module.exports = mongoose.model('Appointment', appointmentSchema); 
