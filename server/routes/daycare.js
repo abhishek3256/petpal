@@ -1,6 +1,6 @@
-const express = require('express');
-const User = require('../models/User');
-const { auth, requireRole } = require('../middleware/auth');
+import express from 'express';
+import User from '../models/User.js';
+import { auth, requireRole } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -13,18 +13,4 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/profile/:id', async (req, res) => {
-  try {
-    const daycare = await User.findById(req.params.id).select('-password');
-    
-    if (!daycare || daycare.role !== 'daycare') {
-      return res.status(404).json({ message: 'Daycare not found.' });
-    }
-    
-    res.json(daycare);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
-});
-
-module.exports = router; 
+export default router; 

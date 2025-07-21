@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Backend for pet marketplace",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },

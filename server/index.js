@@ -1,17 +1,18 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const authRoutes = require('./routes/auth');
-const petRoutes = require('./routes/pets');
-const accessoryRoutes = require('./routes/accessories');
-const vetRoutes = require('./routes/vets');
-const walkerRoutes = require('./routes/walkers');
-const daycareRoutes = require('./routes/daycare');
-const orderRoutes = require('./routes/orders');
-const appointmentRoutes = require('./routes/appointments');
+import authRoutes from './routes/auth.js';
+import petRoutes from './routes/pets.js';
+import accessoryRoutes from './routes/accessories.js';
+import vetRoutes from './routes/vets.js';
+import walkerRoutes from './routes/walkers.js';
+import daycareRoutes from './routes/daycare.js';
+import orderRoutes from './routes/orders.js';
+import appointmentRoutes from './routes/appointments.js';
 
 const app = express();
 app.use(cors({
@@ -21,7 +22,6 @@ app.use(cors({
   ],
   credentials: true
 }));
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -38,7 +38,6 @@ app.use('/api/daycare', daycareRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
-// Add a root route for a friendly landing page
 app.get('/', (req, res) => {
   res.send('API Server is running. Use /api/* endpoints.');
 });
