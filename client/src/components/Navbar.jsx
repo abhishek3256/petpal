@@ -152,11 +152,19 @@ const Navbar = () => {
               </li>
             )}
             {user && (
-              <li>
-                <Link to="/orders" className={location.pathname === '/orders' ? 'active' : ''}>
-                  My Orders
-                </Link>
-              </li>
+              // Show Appointments link for all logged-in users, including admin
+              <>
+                <li>
+                  <Link to="/appointments" className={location.pathname === '/appointments' ? 'active' : ''} title="View and manage your appointments here!">
+                    Appointments
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/orders" className={location.pathname === '/orders' ? 'active' : ''}>
+                    My Orders
+                  </Link>
+                </li>
+              </>
             )}
           </ul>
           {user ? (

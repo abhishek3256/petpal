@@ -102,16 +102,14 @@ const Vets = () => {
                 <p><strong>Sex:</strong> {vet.sex}</p>
                 <p><strong>Location:</strong> {vet.location}</p>
                 <p><strong>Rate:</strong> ₹{vet.hourlyRate}/hour</p>
-                {user && user.role !== 'admin' && user._id !== vet._id && user.id !== vet._id && (
-                  <div style={{ marginTop: '15px' }}>
-                    <button
-                      onClick={() => openBookingForm(vet)}
-                      className="btn btn-secondary"
-                    >
-                      Book Appointment
-                    </button>
-                  </div>
-                )}
+                <div style={{ marginTop: '15px' }}>
+                  <button
+                    onClick={() => openBookingForm(vet)}
+                    className="btn btn-secondary"
+                  >
+                    Book Appointment
+                  </button>
+                </div>
               </div>
               {isOpen && (
                 <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>

@@ -29,8 +29,9 @@ const Appointments = () => {
   }, [user])
 
   useEffect(() => {
-    if (booking.serviceType) fetchProviders(booking.serviceType)
-  }, [booking.serviceType])
+    if (user) fetchAllAppointments();
+    // eslint-disable-next-line
+  }, [user]);
 
   // Fetch both appointments and service orders
   const fetchAllAppointments = async () => {
@@ -165,6 +166,49 @@ const Appointments = () => {
           <div>Loading appointments...</div>
         ) : appointments.length === 0 ? (
           <div>No appointments found.</div>
+        ) : user.role === 'admin' ? (
+          <>
+            {/* My Appointments Section for Admin */}
+            <div className="card" style={{ marginBottom: 24, border: '2px solid #137547' }}>
+              <h3>My Appointments</h3>
+              <div className="grid">
+                {appointments.filter(appt =>
+                  (appt.provider && (appt.provider._id === user._id || appt.provider._id === user.id)) ||
+                  (appt.buyer && (appt.buyer._id === user._id || appt.buyer._id === user.id))
+                ).length === 0 && <div>No appointments found for you.</div>}
+                {appointments
+                  .filter(appt =>
+                    (appt.provider && (appt.provider._id === user._id || appt.provider._id === user.id)) ||
+                    (appt.buyer && (appt.buyer._id === user._id || appt.buyer._id === user.id))
+                  )
+                  .map(appt => (
+                    <div key={appt._id} className="card" style={{ minWidth: 260, margin: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                      <p><strong>Professional:</strong> {appt.provider?.fullName || 'N/A'}{appt.provider?.role ? ` (${appt.provider.role})` : ''}</p>
+                      <p><strong>Booked By:</strong> {appt.buyer?.fullName || 'N/A'}</p>
+                      <p><strong>Date:</strong> {appt.appointmentDate ? new Date(appt.appointmentDate).toLocaleDateString() : 'N/A'}</p>
+                      <p><strong>Time:</strong> {appt.appointmentTime || 'N/A'}</p>
+                      <p><strong>Status:</strong> <span style={{ color: appt.status === 'cancelled' ? 'red' : appt.status === 'completed' ? 'green' : appt.status === 'confirmed' ? '#137547' : '#888' }}>{appt.status}</span></p>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            {/* All Appointments Section for Admin */}
+            <div className="card" style={{ marginBottom: 24 }}>
+              <h3>All Appointments</h3>
+              <div className="grid">
+                {appointments.length === 0 && <div>No appointments found.</div>}
+                {appointments.map(appt => (
+                  <div key={appt._id} className="card" style={{ minWidth: 260, margin: 8, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <p><strong>Professional:</strong> {appt.provider?.fullName || 'N/A'}{appt.provider?.role ? ` (${appt.provider.role})` : ''}</p>
+                    <p><strong>Booked By:</strong> {appt.buyer?.fullName || 'N/A'}</p>
+                    <p><strong>Date:</strong> {appt.appointmentDate ? new Date(appt.appointmentDate).toLocaleDateString() : 'N/A'}</p>
+                    <p><strong>Time:</strong> {appt.appointmentTime || 'N/A'}</p>
+                    <p><strong>Status:</strong> <span style={{ color: appt.status === 'cancelled' ? 'red' : appt.status === 'completed' ? 'green' : appt.status === 'confirmed' ? '#137547' : '#888' }}>{appt.status}</span></p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
         ) : (
           <>
             <div className="card" style={{ marginBottom: 24 }}>
