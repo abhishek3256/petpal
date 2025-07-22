@@ -120,7 +120,7 @@ const Home = () => {
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#FF4500"/><ellipse cx="16" cy="20" rx="7" ry="4" fill="#fff"/><circle cx="12.5" cy="18.5" r="1.5" fill="#FF4500"/><circle cx="19.5" cy="18.5" r="1.5" fill="#FF4500"/><ellipse cx="16" cy="22" rx="2.5" ry="1" fill="#FF4500"/><circle cx="10" cy="12" r="2" fill="#fff"/><circle cx="22" cy="12" r="2" fill="#fff"/><circle cx="10" cy="12" r="1" fill="#FF4500"/><circle cx="22" cy="12" r="1" fill="#FF4500"/><rect x="15" y="8" width="2" height="6" rx="1" fill="#fff"/></svg>
             </a>
           </div>
-          <div style={{ fontSize: 16, color: '#888' }}>Abhishek Ray &middot; PetPal &copy; 2024</div>
+          <div style={{ fontSize: 16, color: '#888' }}>Abhishek Ray &middot; PetPal &copy; 2025</div>
         </div>
       </section>
 
@@ -161,7 +161,7 @@ const Home = () => {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; 2024 PetPal. All rights reserved.</p>
+          <p>&copy; 2025 PetPal. All rights reserved.</p>
         </div>
       </footer>
     </div>
