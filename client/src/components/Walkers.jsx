@@ -24,7 +24,7 @@ const Walkers = () => {
 
   const fetchWalkers = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/walkers`)
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/walkers`)
       setWalkers(response.data)
     } catch (error) {
       toast.error('Failed to fetch pet walkers')
@@ -36,7 +36,7 @@ const Walkers = () => {
   const fetchAppointments = async () => {
     if (!user) return
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=walker&mine=true`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=walker&mine=true`, { withCredentials: true })
       setAppointments(res.data)
     } catch {}
   }
@@ -50,7 +50,7 @@ const Walkers = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/service`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/service`, {
         serviceProviderId: selectedWalker._id,
         serviceType: 'walker',
         appointmentDate: hiringData.appointmentDate,

@@ -24,7 +24,7 @@ const Daycare = () => {
 
   const fetchDaycares = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/daycare`)
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/daycare`)
       setDaycares(response.data)
     } catch (error) {
       toast.error('Failed to fetch daycare services')
@@ -36,7 +36,7 @@ const Daycare = () => {
   const fetchAppointments = async () => {
     if (!user) return
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=daycare&mine=true`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=daycare&mine=true`, { withCredentials: true })
       setAppointments(res.data)
     } catch {}
   }
@@ -50,7 +50,7 @@ const Daycare = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/service`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/service`, {
         serviceProviderId: selectedDaycare._id,
         serviceType: 'daycare',
         appointmentDate: bookingData.appointmentDate,

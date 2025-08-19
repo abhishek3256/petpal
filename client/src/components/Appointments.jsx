@@ -40,15 +40,15 @@ const Appointments = () => {
       // Fetch classic appointments (vet)
       let url = ''
       if (user.role === 'admin') {
-        url = `${import.meta.env.VITE_API_BASE_URL}/appointments/all`
+        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/all`
       } else if (['vet', 'walker', 'daycare'].includes(user.role)) {
-        url = `${import.meta.env.VITE_API_BASE_URL}/appointments/provider`
+        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/provider`
       } else {
-        url = `${import.meta.env.VITE_API_BASE_URL}/appointments/my`
+        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/my`
       }
       const [classicRes, ordersRes] = await Promise.all([
         axios.get(url, { withCredentials: true }),
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?mine=true`, { withCredentials: true })
+        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?mine=true`, { withCredentials: true })
       ])
       // Normalize classic appointments
       const classicAppointments = (classicRes.data || []).map(appt => ({
@@ -85,9 +85,9 @@ const Appointments = () => {
   const fetchProviders = async (type) => {
     setProviders([])
     let url = ''
-    if (type === 'vet') url = `${import.meta.env.VITE_API_BASE_URL}/vets`
-    if (type === 'walker') url = `${import.meta.env.VITE_API_BASE_URL}/walkers`
-    if (type === 'daycare') url = `${import.meta.env.VITE_API_BASE_URL}/daycare`
+    if (type === 'vet') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/vets`
+    if (type === 'walker') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/walkers`
+    if (type === 'daycare') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/daycare`
     try {
       const res = await axios.get(url)
       // Exclude current user if their role matches
@@ -105,7 +105,7 @@ const Appointments = () => {
     }
     setBookingLoading(true)
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/appointments`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments`, {
         providerId: booking.providerId,
         serviceType: booking.serviceType,
         appointmentDate: booking.date,
@@ -125,7 +125,7 @@ const Appointments = () => {
   const handleCancel = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this appointment?')) return
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/appointments/${id}`, { withCredentials: true })
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/${id}`, { withCredentials: true })
       toast.success('Appointment removed!')
       setAppointments(prev => prev.filter(appt => appt._id !== id))
     } catch (error) {
@@ -139,7 +139,7 @@ const Appointments = () => {
       return
     }
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/appointments/${id}/reschedule`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/${id}/reschedule`, {
         appointmentDate: rescheduleData.date,
         appointmentTime: rescheduleData.time
       }, { withCredentials: true })

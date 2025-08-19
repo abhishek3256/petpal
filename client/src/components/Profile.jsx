@@ -23,7 +23,7 @@ const Profile = () => {
   const fetchAppointments = async () => {
     try {
       let type = user.role
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=${type}&mine=true`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=${type}&mine=true`, { withCredentials: true })
       setAppointments(res.data)
     } catch {}
   }
@@ -31,7 +31,7 @@ const Profile = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true)
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/my-orders`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/my-orders`, { withCredentials: true })
       setOrders(res.data)
     } catch (error) {
       toast.error('Failed to fetch your orders')
@@ -48,7 +48,7 @@ const Profile = () => {
     setLoading(true)
     try {
       // If editing own profile, use /auth/me
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/auth/me`, form, { withCredentials: true })
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/me`, form, { withCredentials: true })
       toast.success('Profile updated!')
       setEditMode(false)
       checkAuth()

@@ -54,14 +54,14 @@ const Admin = () => {
   const fetchData = async () => {
     try {
       const [usersResponse, ordersResponse, petsResponse, accessoriesResponse] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/auth/users`, {
+        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/users`, {
           withCredentials: true
         }),
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/all`, {
+        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/all`, {
           withCredentials: true
         }),
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/pets`),
-        axios.get(`${import.meta.env.VITE_API_BASE_URL}/accessories`)
+        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets`),
+        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories`)
       ])
       
       setUsers(usersResponse.data)
@@ -77,26 +77,26 @@ const Admin = () => {
 
   const fetchVetAppointments = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=vet`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=vet`, { withCredentials: true })
       setVetAppointments(res.data)
     } catch {}
   }
   const fetchWalkerAppointments = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=walker`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=walker`, { withCredentials: true })
       setWalkerAppointments(res.data)
     } catch {}
   }
   const fetchDaycareAppointments = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments?type=daycare`, { withCredentials: true })
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=daycare`, { withCredentials: true })
       setDaycareAppointments(res.data)
     } catch {}
   }
 
   const handleStatusUpdate = async (orderId, status) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/status`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/${orderId}/status`, {
         status
       }, {
         withCredentials: true
@@ -111,7 +111,7 @@ const Admin = () => {
 
   const handleUserToggle = async (userId, isActive) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/auth/users/${userId}`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/users/${userId}`, {
         isActive: !isActive
       }, {
         withCredentials: true
@@ -128,7 +128,7 @@ const Admin = () => {
     e.preventDefault()
     
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/pets/admin`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/admin`, {
         ...petFormData,
         age: parseInt(petFormData.age),
         price: parseFloat(petFormData.price)
@@ -157,7 +157,7 @@ const Admin = () => {
     e.preventDefault()
     
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/accessories`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories`, {
         ...accessoryFormData,
         cost: parseFloat(accessoryFormData.cost)
       }, {
@@ -197,7 +197,7 @@ const Admin = () => {
   const handleDeletePet = async (petId) => {
     if (window.confirm('Are you sure you want to delete this pet?')) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/pets/${petId}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/${petId}`, {
           withCredentials: true
         })
         toast.success('Pet deleted successfully!')
@@ -211,7 +211,7 @@ const Admin = () => {
   const handleDeleteAccessory = async (accessoryId) => {
     if (window.confirm('Are you sure you want to delete this accessory?')) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/accessories/${accessoryId}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories/${accessoryId}`, {
           withCredentials: true
         })
         toast.success('Accessory deleted successfully!')
@@ -232,7 +232,7 @@ const Admin = () => {
       return
     }
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/pet`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/pet`, {
         petId
       }, {
         withCredentials: true
@@ -271,7 +271,7 @@ const Admin = () => {
 
   const saveUserEdit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/auth/users/${editingUserId}`, userEditForm, { withCredentials: true })
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/users/${editingUserId}`, userEditForm, { withCredentials: true })
       toast.success('User updated successfully!')
       setEditingUserId(null)
       setUserEditForm({})
@@ -284,7 +284,7 @@ const Admin = () => {
   const handleDeleteOrder = async (orderId) => {
     if (!window.confirm('Are you sure you want to delete this order?')) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/${orderId}`, { withCredentials: true });
       toast.success('Order deleted successfully!');
       fetchData();
     } catch (error) {
@@ -309,7 +309,7 @@ const Admin = () => {
 
   const saveAppointmentEdit = async (apptId) => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments/${apptId}`, appointmentEditForm, { withCredentials: true });
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments/${apptId}`, appointmentEditForm, { withCredentials: true });
       toast.success('Appointment updated!');
       setEditingAppointmentId(null);
       setAppointmentEditForm({ appointmentDate: '', appointmentTime: '' });
@@ -324,7 +324,7 @@ const Admin = () => {
   const handleCancelAppointment = async (apptId) => {
     if (!window.confirm('Are you sure you want to cancel this appointment?')) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/orders/appointments/${apptId}`, { withCredentials: true });
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments/${apptId}`, { withCredentials: true });
       toast.success('Appointment cancelled!');
       fetchVetAppointments();
       fetchWalkerAppointments();

@@ -25,7 +25,7 @@ const Pets = () => {
 
   const fetchPets = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/pets`)
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets`)
       setPets(response.data)
     } catch (error) {
       toast.error('Failed to fetch pets')
@@ -40,7 +40,7 @@ const Pets = () => {
       return
     }
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/pet`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/pet`, {
         petId
       }, {
         withCredentials: true
@@ -86,7 +86,7 @@ const Pets = () => {
 
   const saveEdit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/pets/${editingId}`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/${editingId}`, {
         name: editForm.name,
         type: editForm.type,
         breed: editForm.breed,

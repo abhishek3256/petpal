@@ -27,7 +27,7 @@ const Sell = () => {
 
   const fetchMyPets = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/pets/my-pets`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/my-pets`, {
         withCredentials: true
       })
       setPets(response.data)
@@ -42,7 +42,7 @@ const Sell = () => {
     e.preventDefault()
     
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/pets`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets`, {
         ...formData,
         age: parseInt(formData.age),
         price: parseFloat(formData.price)
@@ -70,7 +70,7 @@ const Sell = () => {
   const handleDelete = async (petId) => {
     if (window.confirm('Are you sure you want to delete this pet?')) {
       try {
-        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/pets/${petId}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/${petId}`, {
           withCredentials: true
         })
         toast.success('Pet deleted successfully!')

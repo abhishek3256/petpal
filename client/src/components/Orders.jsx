@@ -18,7 +18,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true)
     try {
-      let url = `${import.meta.env.VITE_API_BASE_URL}/orders/my-orders`
+      let url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/my-orders`
       const res = await axios.get(url, { withCredentials: true })
       setOrders(res.data)
     } catch (error) {
@@ -43,7 +43,7 @@ const Orders = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     setStatusUpdating(orderId)
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/orders/${orderId}/status`, { status: newStatus }, { withCredentials: true })
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/${orderId}/status`, { status: newStatus }, { withCredentials: true })
       toast.success('Order status updated!')
       fetchOrders()
     } catch (error) {

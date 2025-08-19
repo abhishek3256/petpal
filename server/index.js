@@ -50,7 +50,16 @@ app.use('/api/daycare', daycareRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-}); 
+// Export the app for Vercel serverless functions and
+// start a local server only when not running on Vercel
+const runningOnVercel = !!process.env.VERCEL;
+if (!runningOnVercel) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = (req, res) => {
+  return app(req, res);
+};

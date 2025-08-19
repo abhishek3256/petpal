@@ -18,7 +18,7 @@ const Accessories = () => {
 
   const fetchAccessories = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/accessories`)
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories`)
       setAccessories(response.data)
     } catch (error) {
       toast.error('Failed to fetch accessories')
@@ -33,7 +33,7 @@ const Accessories = () => {
       return
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/orders/accessory`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/accessory`, {
         accessoryId
       }, {
         withCredentials: true
@@ -83,7 +83,7 @@ const Accessories = () => {
 
   const saveEdit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/accessories/${editingId}`, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories/${editingId}`, {
         name: editForm.name,
         description: editForm.description,
         cost: editForm.cost,

@@ -31,7 +31,7 @@ const Vets = () => {
 
   const fetchVets = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/vets`)
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/vets`)
       setVets(response.data)
     } catch (error) {
       toast.error('Failed to fetch veterinarians')
@@ -57,7 +57,7 @@ const Vets = () => {
       return
     }
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/appointments`, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments`, {
         providerId: selectedVet._id,
         serviceType: 'vet',
         appointmentDate: bookingData.appointmentDate,
