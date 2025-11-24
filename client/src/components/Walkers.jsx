@@ -38,12 +38,12 @@ const Walkers = () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=walker&mine=true`, { withCredentials: true })
       setAppointments(res.data)
-    } catch {}
+    } catch { }
   }
 
   const handleHireWalker = async (e) => {
     e.preventDefault()
-    
+
     if (!user) {
       toast.error('Please login to hire walkers')
       return
@@ -58,7 +58,7 @@ const Walkers = () => {
       }, {
         withCredentials: true
       })
-      
+
       toast.success('Walker hired successfully!')
       setShowHiringForm(false)
       setSelectedWalker(null)
@@ -83,13 +83,13 @@ const Walkers = () => {
     <div className="container" style={{ background: 'linear-gradient(135deg, #e3eef7 0%, #b0cbe5 100%)', borderRadius: 16, padding: 24 }}>
       <h1 className="section-title">Pet Walkers</h1>
       <p className="section-subtitle">Professional pet walking services</p>
-      
-      <div className="grid">
+
+      <div className="responsive-grid">
         {walkers.map((walker, idx) => {
           const isOpen = showHiringForm && selectedWalker && selectedWalker._id === walker._id;
           return (
-            <div key={walker._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-              <div className="card" style={{ position: 'relative', marginBottom: 16 }}>
+            <div key={walker._id} className="responsive-card">
+              <div className="responsive-card-content" style={{ alignItems: 'center', textAlign: 'center' }}>
                 <img
                   src={walker.image || defaultImages.user}
                   alt={walker.fullName}
@@ -116,7 +116,7 @@ const Walkers = () => {
                 </div>
               </div>
               {isOpen && (
-                <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                <div className="responsive-card-content" style={{ marginTop: 0, background: '#f9f9f9', borderTop: '1px solid #eee' }}>
                   <h3>Hire {walker.fullName}</h3>
                   <p><strong>Rate:</strong> ₹{walker.hourlyRate}/hour</p>
                   <form onSubmit={handleHireWalker}>
@@ -176,7 +176,7 @@ const Walkers = () => {
           );
         })}
       </div>
-      
+
       {walkers.length === 0 && (
         <div className="text-center">
           <p>No pet walkers available at the moment.</p>

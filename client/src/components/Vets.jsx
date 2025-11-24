@@ -80,82 +80,86 @@ const Vets = () => {
     <div className="container" style={{ background: 'linear-gradient(135deg, #ffe3cf 0%, #bfc3d9 100%)', borderRadius: 16, padding: 24 }}>
       <h1 className="section-title">Veterinarians</h1>
       <p className="section-subtitle">Book appointments with experienced vets</p>
-      <div className="grid">
+      <div className="responsive-grid">
         {vets.map((vet, idx) => {
           const isOpen = showBookingForm && selectedVet && selectedVet._id === vet._id;
           return (
             <div key={vet._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-              <div className="card" style={{ position: 'relative', marginBottom: 16 }}>
-                <img
-                  src={vet.image || defaultImages.user}
-                  alt={vet.fullName}
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    marginBottom: '15px'
-                  }}
-                />
-                <h3>Dr. {vet.fullName}</h3>
-                <p><strong>Age:</strong> {vet.age} years</p>
-                <p><strong>Sex:</strong> {vet.sex}</p>
-                <p><strong>Location:</strong> {vet.location}</p>
-                <p><strong>Rate:</strong> ₹{vet.hourlyRate}/hour</p>
-                <div style={{ marginTop: '15px' }}>
-                  <button
-                    onClick={() => openBookingForm(vet)}
-                    className="btn btn-secondary"
-                  >
-                    Book Appointment
-                  </button>
+              <div className="responsive-card">
+                <div className="responsive-card-content" style={{ alignItems: 'center', textAlign: 'center' }}>
+                  <img
+                    src={vet.image || defaultImages.user}
+                    alt={vet.fullName}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      marginBottom: '15px'
+                    }}
+                  />
+                  <h3>Dr. {vet.fullName}</h3>
+                  <p><strong>Age:</strong> {vet.age} years</p>
+                  <p><strong>Sex:</strong> {vet.sex}</p>
+                  <p><strong>Location:</strong> {vet.location}</p>
+                  <p><strong>Rate:</strong> ₹{vet.hourlyRate}/hour</p>
+                  <div>
+                    <button
+                      onClick={() => openBookingForm(vet)}
+                      className="btn btn-secondary"
+                    >
+                      Book Appointment
+                    </button>
+                  </div>
                 </div>
               </div>
               {isOpen && (
-                <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
-                  <h3>Book Appointment with Dr. {vet.fullName}</h3>
-                  <p><strong>Rate:</strong> ₹{vet.hourlyRate}/hour</p>
-                  <form onSubmit={handleBookAppointment}>
-                    <div className="form-group">
-                      <label htmlFor="appointmentDate">Date</label>
-                      <input
-                        type="date"
-                        id="appointmentDate"
-                        name="appointmentDate"
-                        value={bookingData.appointmentDate}
-                        onChange={e => setBookingData({ ...bookingData, appointmentDate: e.target.value })}
-                        required
-                        min={new Date().toISOString().split('T')[0]}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="appointmentTime">Time</label>
-                      <select
-                        id="appointmentTime"
-                        name="appointmentTime"
-                        value={bookingData.appointmentTime}
-                        onChange={e => setBookingData({ ...bookingData, appointmentTime: e.target.value })}
-                        required
-                      >
-                        <option value="">Select Time</option>
-                        {timeOptions.map(opt => (
-                          <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex" style={{ gap: '10px' }}>
-                      <button type="submit" className="btn btn-success">
-                        Book Appointment
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => { setShowBookingForm(false); setSelectedVet(null); }}
-                        className="btn btn-secondary"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
+                <div className="responsive-card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                  <div className="responsive-card-content">
+                    <h3>Book Appointment with Dr. {vet.fullName}</h3>
+                    <p><strong>Rate:</strong> ₹{vet.hourlyRate}/hour</p>
+                    <form onSubmit={handleBookAppointment}>
+                      <div className="form-group">
+                        <label htmlFor="appointmentDate">Date</label>
+                        <input
+                          type="date"
+                          id="appointmentDate"
+                          name="appointmentDate"
+                          value={bookingData.appointmentDate}
+                          onChange={e => setBookingData({ ...bookingData, appointmentDate: e.target.value })}
+                          required
+                          min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="appointmentTime">Time</label>
+                        <select
+                          id="appointmentTime"
+                          name="appointmentTime"
+                          value={bookingData.appointmentTime}
+                          onChange={e => setBookingData({ ...bookingData, appointmentTime: e.target.value })}
+                          required
+                        >
+                          <option value="">Select Time</option>
+                          {timeOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex">
+                        <button type="submit" className="btn btn-success">
+                          Book Appointment
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setShowBookingForm(false); setSelectedVet(null); }}
+                          className="btn btn-secondary"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               )}
             </div>

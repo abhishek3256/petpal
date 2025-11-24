@@ -121,179 +121,176 @@ const Pets = () => {
           </button>
         ))}
       </div>
-      <div className="pets-grid">
+      <div className="responsive-grid">
         {pets
           .filter(pet => animalFilter === 'All' ? true : pet.type === animalFilter)
           .map((pet) => (
-          <div key={pet._id} className="pet-card">
-            <div className="pet-image-container">
-              <img
-                src={pet.image || defaultImages.pet}
-                alt={pet.name}
-                className="pet-image"
-                onError={handleImageError}
-                style={{ display: editingId === pet._id ? 'none' : 'block' }}
-              />
-              <div className="pet-image-placeholder" style={{ display: 'none' }}>
-                <div>
-                  <div style={{ fontSize: '24px', marginBottom: '8px' }}>🐾</div>
-                  <div>Pet Image</div>
-                  <div style={{ fontSize: '12px', marginTop: '4px' }}>Vertical Rectangle</div>
-                </div>
-              </div>
-              {editingId === pet._id && (
-                <input
-                  type="url"
-                  name="image"
-                  value={editForm.image}
-                  onChange={handleEditChange}
-                  className="form-group"
-                  style={{ width: '100%', marginTop: 8 }}
-                  placeholder="Image URL"
+            <div key={pet._id} className="responsive-card">
+              <div className="pet-image-container">
+                <img
+                  src={pet.image || defaultImages.pet}
+                  alt={pet.name}
+                  className="pet-image"
+                  onError={handleImageError}
+                  style={{ display: editingId === pet._id ? 'none' : 'block' }}
                 />
-              )}
-            </div>
-            <div
-              className={editingId === pet._id ? 'pet-content editing' : 'pet-content'}
-              style={editingId === pet._id ? { position: 'relative' } : {}}
-            >
-              {editingId === pet._id ? (
-                <>
-                  <div className="pet-edit-form-scroll">
-                    <div className="pet-edit-image-preview">
-                      <img
-                        src={editForm.image || defaultImages.pet}
-                        alt="Preview"
-                        onError={e => (e.target.src = defaultImages.pet)}
+                <div className="pet-image-placeholder" style={{ display: 'none' }}>
+                  <div>
+                    <div style={{ fontSize: '24px', marginBottom: '8px' }}>🐾</div>
+                    <div>Pet Image</div>
+                    <div style={{ fontSize: '12px', marginTop: '4px' }}>Vertical Rectangle</div>
+                  </div>
+                </div>
+                {editingId === pet._id && (
+                  <input
+                    type="url"
+                    name="image"
+                    value={editForm.image}
+                    onChange={handleEditChange}
+                    className="form-group"
+                    placeholder="Image URL"
+                  />
+                )}
+              </div>
+              <div
+                className={editingId === pet._id ? 'responsive-card-content editing' : 'responsive-card-content'}
+                style={editingId === pet._id ? { position: 'relative' } : {}}
+              >
+                {editingId === pet._id ? (
+                  <>
+                    <div className="pet-edit-form-scroll">
+                      <div className="pet-edit-image-preview">
+                        <img
+                          src={editForm.image || defaultImages.pet}
+                          alt="Preview"
+                          onError={e => (e.target.src = defaultImages.pet)}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        name="name"
+                        value={editForm.name}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        placeholder="Pet Name"
+                      />
+                      <select
+                        name="type"
+                        value={editForm.type}
+                        onChange={handleEditChange}
+                        className="form-group"
+                      >
+                        <option value="">Select Animal Type</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                        <option value="Beaver">Beaver</option>
+                        <option value="Capybara">Capybara</option>
+                        <option value="Lion">Lion</option>
+                        <option value="Tiger">Tiger</option>
+                        <option value="Otter">Otter</option>
+                      </select>
+                      <input
+                        type="text"
+                        name="breed"
+                        value={editForm.breed}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        placeholder="Breed"
+                      />
+                      <input
+                        type="number"
+                        name="age"
+                        value={editForm.age}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        placeholder="Age (years)"
+                      />
+                      <input
+                        type="number"
+                        name="price"
+                        value={editForm.price}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        placeholder="Price (₹)"
+                      />
+                      <input
+                        type="url"
+                        name="image"
+                        value={editForm.image}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        placeholder="Image URL"
+                      />
+                      <textarea
+                        name="description"
+                        value={editForm.description}
+                        onChange={handleEditChange}
+                        className="form-group"
+                        rows={3}
+                        placeholder="Description"
                       />
                     </div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={editForm.name}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      style={{ fontWeight: 'bold', fontSize: '1.1rem', marginBottom: 8 }}
-                      placeholder="Pet Name"
-                    />
-                    <select
-                      name="type"
-                      value={editForm.type}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      style={{ marginBottom: 8 }}
-                    >
-                      <option value="">Select Animal Type</option>
-                      <option value="Dog">Dog</option>
-                      <option value="Cat">Cat</option>
-                      <option value="Beaver">Beaver</option>
-                      <option value="Capybara">Capybara</option>
-                      <option value="Lion">Lion</option>
-                      <option value="Tiger">Tiger</option>
-                      <option value="Otter">Otter</option>
-                    </select>
-                    <input
-                      type="text"
-                      name="breed"
-                      value={editForm.breed}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      placeholder="Breed"
-                    />
-                    <input
-                      type="number"
-                      name="age"
-                      value={editForm.age}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      placeholder="Age (years)"
-                    />
-                    <input
-                      type="number"
-                      name="price"
-                      value={editForm.price}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      placeholder="Price (₹)"
-                    />
-                    <input
-                      type="url"
-                      name="image"
-                      value={editForm.image}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      placeholder="Image URL"
-                    />
-                    <textarea
-                      name="description"
-                      value={editForm.description}
-                      onChange={handleEditChange}
-                      className="form-group"
-                      rows={3}
-                      placeholder="Description"
-                    />
-                  </div>
-                  <div className="pet-actions">
-                    <button className="btn btn-success" onClick={saveEdit}>Save</button>
-                    <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <h3 className="pet-title">{pet.name}</h3>
-                  <div className="pet-details">
-                    <p className="pet-detail">
-                      <strong>Type:</strong> {pet.type}
-                    </p>
-                    <p className="pet-detail">
-                      <strong>Breed:</strong> {pet.breed}
-                    </p>
-                    <p className="pet-detail">
-                      <strong>Age:</strong> {pet.age} years
-                    </p>
-                    <p className="pet-detail">
-                      <strong>Location:</strong> {pet.seller?.location || 'N/A'}
-                    </p>
-                    <p className="pet-detail">
-                      <strong>Seller:</strong> {pet.seller?.fullName || 'N/A'}
-                    </p>
-                  </div>
-                  <div style={{ marginBottom: 8, color: '#137547', fontWeight: 600 }}>
-                    Stock: {pet.stock ?? 1}
-                  </div>
-                  <div className="pet-description-container">
-                    <p className={`pet-description ${expandedDescriptions[pet._id] ? 'expanded' : ''}`}>
-                      {pet.description}
-                    </p>
-                    <button
-                      onClick={() => toggleDescription(pet._id)}
-                      className="view-details-btn"
-                    >
-                      {expandedDescriptions[pet._id] ? 'Show Less' : 'View Details'}
-                    </button>
-                  </div>
-                  <div className="pet-actions">
-                    <span className="price">₹{pet.price}</span>
-                    <button
-                      onClick={() => handlePurchase(pet._id)}
-                      className="btn btn-success"
-                    >
-                      Buy This Pet
-                    </button>
-                    {user?.role === 'admin' && (
+                    <div className="pet-actions">
+                      <button className="btn btn-success" onClick={saveEdit}>Save</button>
+                      <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="pet-title">{pet.name}</h3>
+                    <div className="pet-details">
+                      <p className="pet-detail">
+                        <strong>Type:</strong> {pet.type}
+                      </p>
+                      <p className="pet-detail">
+                        <strong>Breed:</strong> {pet.breed}
+                      </p>
+                      <p className="pet-detail">
+                        <strong>Age:</strong> {pet.age} years
+                      </p>
+                      <p className="pet-detail">
+                        <strong>Location:</strong> {pet.seller?.location || 'N/A'}
+                      </p>
+                      <p className="pet-detail">
+                        <strong>Seller:</strong> {pet.seller?.fullName || 'N/A'}
+                      </p>
+                    </div>
+                    <div style={{ marginBottom: 8, color: '#137547', fontWeight: 600 }}>
+                      Stock: {pet.stock ?? 1}
+                    </div>
+                    <div className="pet-description-container">
+                      <p className={`pet-description ${expandedDescriptions[pet._id] ? 'expanded' : ''}`}>
+                        {pet.description}
+                      </p>
                       <button
-                        className="btn btn-secondary"
-                        onClick={() => startEdit(pet)}
+                        onClick={() => toggleDescription(pet._id)}
+                        className="view-details-btn"
                       >
-                        Edit
+                        {expandedDescriptions[pet._id] ? 'Show Less' : 'View Details'}
                       </button>
-                    )}
-                  </div>
-                </>
-              )}
+                    </div>
+                    <div className="pet-actions">
+                      <span className="price">₹{pet.price}</span>
+                      <button
+                        onClick={() => handlePurchase(pet._id)}
+                        className="btn btn-success"
+                      >
+                        Buy This Pet
+                      </button>
+                      {user?.role === 'admin' && (
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => startEdit(pet)}
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       {pets.length === 0 && (
         <div className="text-center">
@@ -304,4 +301,4 @@ const Pets = () => {
   )
 }
 
-export default Pets 
+export default Pets

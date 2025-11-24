@@ -38,12 +38,12 @@ const Daycare = () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=daycare&mine=true`, { withCredentials: true })
       setAppointments(res.data)
-    } catch {}
+    } catch { }
   }
 
   const handleBookDaycare = async (e) => {
     e.preventDefault()
-    
+
     if (!user) {
       toast.error('Please login to book daycare services')
       return
@@ -58,7 +58,7 @@ const Daycare = () => {
       }, {
         withCredentials: true
       })
-      
+
       toast.success('Daycare service booked successfully!')
       setShowBookingForm(false)
       setSelectedDaycare(null)
@@ -83,13 +83,13 @@ const Daycare = () => {
     <div className="container" style={{ background: 'linear-gradient(135deg, #d8b4d8 0%, #7ee8c4 100%)', borderRadius: 16, padding: 24 }}>
       <h1 className="section-title">Pet Daycare</h1>
       <p className="section-subtitle">Safe and caring daycare services for your pets</p>
-      
-      <div className="grid">
+
+      <div className="responsive-grid">
         {daycares.map((daycare, idx) => {
           const isOpen = showBookingForm && selectedDaycare && selectedDaycare._id === daycare._id;
           return (
-            <div key={daycare._id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-              <div className="card" style={{ position: 'relative', marginBottom: 16 }}>
+            <div key={daycare._id} className="responsive-card">
+              <div className="responsive-card-content" style={{ alignItems: 'center', textAlign: 'center' }}>
                 <img
                   src={daycare.image || defaultImages.user}
                   alt={daycare.fullName}
@@ -116,7 +116,7 @@ const Daycare = () => {
                 </div>
               </div>
               {isOpen && (
-                <div className="card" style={{ marginTop: 0, background: '#f9f9f9', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+                <div className="responsive-card-content" style={{ marginTop: 0, background: '#f9f9f9', borderTop: '1px solid #eee' }}>
                   <h3>Book Daycare with {daycare.fullName}</h3>
                   <p><strong>Rate:</strong> ₹{daycare.hourlyRate}/hour</p>
                   <form onSubmit={handleBookDaycare}>
@@ -174,7 +174,7 @@ const Daycare = () => {
           );
         })}
       </div>
-      
+
       {daycares.length === 0 && (
         <div className="text-center">
           <p>No daycare services available at the moment.</p>
