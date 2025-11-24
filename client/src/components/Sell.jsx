@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -6,7 +7,7 @@ import { defaultImages } from '../utils/imageLinks'
 
 const Sell = () => {
   const [pets, setPets] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [petsLoading, setPetsLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -17,13 +18,21 @@ const Sell = () => {
     description: '',
     image: ''
   })
-  const { user } = useAuth()
+  const { user, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (user?.role === 'seller') {
-      fetchMyPets()
+    if (authLoading) return
+    if (!user) {
+      navigate('/login', { state: { from: '/sell' } })
+      return
     }
-  }, [user])
+    if (user.role === 'seller') {
+      fetchMyPets()
+    } else {
+      setPetsLoading(false)
+    }
+  }, [user, authLoading, navigate])
 
   const fetchMyPets = async () => {
     try {
@@ -34,7 +43,7 @@ const Sell = () => {
     } catch (error) {
       toast.error('Failed to fetch your pets')
     } finally {
-      setLoading(false)
+      setPetsLoading(false)
     }
   }
 
@@ -88,7 +97,15 @@ const Sell = () => {
     })
   }
 
-  if (!user || user.role !== 'seller') {
+  if (authLoading) {
+    return <div className="loading">Checking access...</div>
+  }
+
+  if (!user) {
+    return null
+  }
+
+  if (user.role !== 'seller') {
     return (
       <div className="container">
         <div className="card text-center">
@@ -99,7 +116,7 @@ const Sell = () => {
     )
   }
 
-  if (loading) {
+  if (petsLoading) {
     return <div className="loading">Loading your pets...</div>
   }
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -12,12 +13,7 @@ const Pets = () => {
   const [editForm, setEditForm] = useState({})
   const [animalFilter, setAnimalFilter] = useState('All')
   const { user } = useAuth()
-
-  useEffect(() => {
-    if (!user) {
-      window.location.href = '/login';
-    }
-  }, [user])
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchPets()
@@ -37,6 +33,7 @@ const Pets = () => {
   const handlePurchase = async (petId) => {
     if (!user) {
       toast.error('Please login to purchase pets')
+      navigate('/login', { state: { from: '/pets' } })
       return
     }
     try {

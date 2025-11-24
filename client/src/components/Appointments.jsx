@@ -11,7 +11,7 @@ const serviceTypes = [
 ]
 
 const Appointments = () => {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const navigate = useNavigate()
   const [tab, setTab] = useState('booked')
   const [appointments, setAppointments] = useState([])
@@ -23,10 +23,10 @@ const Appointments = () => {
   const [bookingLoading, setBookingLoading] = useState(false)
 
   useEffect(() => {
-    if (!user) {
-      window.location.href = '/login';
+    if (!loading && !user) {
+      navigate('/login', { replace: true, state: { from: '/appointments' } })
     }
-  }, [user])
+  }, [user, loading, navigate])
 
   useEffect(() => {
     if (user) fetchAllAppointments();
@@ -150,6 +150,14 @@ const Appointments = () => {
     } catch (error) {
       toast.error('Failed to reschedule appointment')
     }
+  }
+
+  if (loading) {
+    return <div className="loading">Loading appointments...</div>
+  }
+
+  if (!user) {
+    return null
   }
 
   return (
