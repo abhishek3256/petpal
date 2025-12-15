@@ -30,10 +30,11 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
+
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true, // Always required for SameSite=None
+      sameSite: 'none', // Required for cross-site cookies
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
@@ -67,10 +68,11 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    
+
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true, // Always required for SameSite=None
+      sameSite: 'none', // Required for cross-site cookies
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
