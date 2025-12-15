@@ -3,19 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "https://pet-server-seven.vercel.app/api/$1"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://pet-server-seven.vercel.app/api/$1"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
