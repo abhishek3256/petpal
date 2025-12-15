@@ -109,9 +109,9 @@ const Accessories = () => {
     <div className="container" style={{ background: 'linear-gradient(135deg, #e3eef7 0%, #b0cbe5 100%)', borderRadius: 16, padding: 24 }}>
       <h1 className="section-title">Pet Accessories</h1>
       <p className="section-subtitle">Everything your pet needs</p>
-      <div className="responsive-grid">
+      <div className="accessories-grid">
         {accessories.map((accessory) => (
-          <div key={accessory._id} className="responsive-card">
+          <div key={accessory._id} className="accessory-card">
             <div className="accessory-image-container">
               <img
                 src={accessory.image || defaultImages.accessory}
@@ -139,7 +139,7 @@ const Accessories = () => {
                 />
               )}
             </div>
-            <div className={editingId === accessory._id ? 'responsive-card-content editing' : 'responsive-card-content'}>
+            <div className={editingId === accessory._id ? 'accessory-content editing' : 'accessory-content'}>
               {editingId === accessory._id ? (
                 <>
                   <div className="accessory-edit-form-scroll">

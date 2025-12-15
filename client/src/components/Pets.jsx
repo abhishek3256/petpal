@@ -121,11 +121,11 @@ const Pets = () => {
           </button>
         ))}
       </div>
-      <div className="responsive-grid">
+      <div className="pets-grid">
         {pets
           .filter(pet => animalFilter === 'All' ? true : pet.type === animalFilter)
           .map((pet) => (
-            <div key={pet._id} className="responsive-card">
+            <div key={pet._id} className="pet-card">
               <div className="pet-image-container">
                 <img
                   src={pet.image || defaultImages.pet}
@@ -153,7 +153,7 @@ const Pets = () => {
                 )}
               </div>
               <div
-                className={editingId === pet._id ? 'responsive-card-content editing' : 'responsive-card-content'}
+                className={editingId === pet._id ? 'pet-content editing' : 'pet-content'}
                 style={editingId === pet._id ? { position: 'relative' } : {}}
               >
                 {editingId === pet._id ? (
