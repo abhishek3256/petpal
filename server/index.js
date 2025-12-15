@@ -14,23 +14,19 @@ const orderRoutes = require('./routes/orders');
 const appointmentRoutes = require('./routes/appointments');
 
 const app = express();
-const allowedOrigins = [
-  'https://petpal-3zse.vercel.app',
-  'https://pet-client.vercel.app',
-  'https://pet-git-main.vercel.app',
-  'https://pet-client-vercel.app',
-  'https://pet.vercel.app',
-  'https://pet-client-one.vercel.app',
-  'http://localhost:5173'
-];
 
 app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc)
+    if (!origin) return callback(null, true);
+
+    // Allow localhost for development
+    if (origin.includes('localhost')) return callback(null, true);
+
+    // Allow any vercel.app subdomain
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true
 }));
