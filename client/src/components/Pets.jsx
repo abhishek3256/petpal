@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Pets = () => {
@@ -21,7 +21,7 @@ const Pets = () => {
 
   const fetchPets = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets`)
+      const response = await api.get('/pets')
       setPets(response.data)
     } catch (error) {
       toast.error('Failed to fetch pets')
@@ -37,10 +37,8 @@ const Pets = () => {
       return
     }
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/pet`, {
+      await api.post('/orders/pet', {
         petId
-      }, {
-        withCredentials: true
       })
       toast.success('Pet purchased successfully!')
       fetchPets()
@@ -83,7 +81,7 @@ const Pets = () => {
 
   const saveEdit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/${editingId}`, {
+      await api.put(`/pets/${editingId}`, {
         name: editForm.name,
         type: editForm.type,
         breed: editForm.breed,
@@ -91,7 +89,7 @@ const Pets = () => {
         price: editForm.price,
         description: editForm.description,
         image: editForm.image
-      }, { withCredentials: true })
+      })
       toast.success('Pet updated!')
       setEditingId(null)
       setEditForm({})

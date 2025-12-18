@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Walkers = () => {
@@ -24,7 +24,7 @@ const Walkers = () => {
 
   const fetchWalkers = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/walkers`)
+      const response = await api.get('/walkers')
       setWalkers(response.data)
     } catch (error) {
       toast.error('Failed to fetch pet walkers')
@@ -36,7 +36,7 @@ const Walkers = () => {
   const fetchAppointments = async () => {
     if (!user) return
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=walker&mine=true`, { withCredentials: true })
+      const res = await api.get('/orders/appointments?type=walker&mine=true')
       setAppointments(res.data)
     } catch { }
   }
@@ -50,13 +50,11 @@ const Walkers = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/service`, {
+      await api.post('/orders/service', {
         serviceProviderId: selectedWalker._id,
         serviceType: 'walker',
         appointmentDate: hiringData.appointmentDate,
         appointmentTime: hiringData.appointmentTime
-      }, {
-        withCredentials: true
       })
 
       toast.success('Walker hired successfully!')

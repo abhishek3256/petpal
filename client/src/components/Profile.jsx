@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Profile = () => {
@@ -23,7 +23,7 @@ const Profile = () => {
   const fetchAppointments = async () => {
     try {
       let type = user.role
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=${type}&mine=true`, { withCredentials: true })
+      const res = await api.get(`/orders/appointments?type=${type}&mine=true`)
       setAppointments(res.data)
     } catch {}
   }
@@ -31,7 +31,7 @@ const Profile = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true)
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/my-orders`, { withCredentials: true })
+      const res = await api.get('/orders/my-orders')
       setOrders(res.data)
     } catch (error) {
       toast.error('Failed to fetch your orders')
@@ -48,7 +48,7 @@ const Profile = () => {
     setLoading(true)
     try {
       // If editing own profile, use /auth/me
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/me`, form, { withCredentials: true })
+      await api.put('/auth/me', form)
       toast.success('Profile updated!')
       setEditMode(false)
       checkAuth()

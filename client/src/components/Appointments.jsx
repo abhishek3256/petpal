@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { useNavigate } from 'react-router-dom'
 
 const serviceTypes = [
@@ -40,15 +40,15 @@ const Appointments = () => {
       // Fetch classic appointments (vet)
       let url = ''
       if (user.role === 'admin') {
-        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/all`
+        url = '/appointments/all'
       } else if (['vet', 'walker', 'daycare'].includes(user.role)) {
-        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/provider`
+        url = '/appointments/provider'
       } else {
-        url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/my`
+        url = '/appointments/my'
       }
       const [classicRes, ordersRes] = await Promise.all([
-        axios.get(url, { withCredentials: true }),
-        axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?mine=true`, { withCredentials: true })
+        api.get(url),
+        api.get('/orders/appointments?mine=true')
       ])
       // Normalize classic appointments
       const classicAppointments = (classicRes.data || []).map(appt => ({
@@ -85,11 +85,11 @@ const Appointments = () => {
   const fetchProviders = async (type) => {
     setProviders([])
     let url = ''
-    if (type === 'vet') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/vets`
-    if (type === 'walker') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/walkers`
-    if (type === 'daycare') url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/daycare`
+    if (type === 'vet') url = '/vets'
+    if (type === 'walker') url = '/walkers'
+    if (type === 'daycare') url = '/daycare'
     try {
-      const res = await axios.get(url)
+      const res = await api.get(url)
       // Exclude current user if their role matches
       setProviders(res.data.filter(p => p._id !== user._id && p._id !== user.id))
     } catch (error) {
@@ -105,12 +105,12 @@ const Appointments = () => {
     }
     setBookingLoading(true)
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments`, {
+      await api.post('/appointments', {
         providerId: booking.providerId,
         serviceType: booking.serviceType,
         appointmentDate: booking.date,
         appointmentTime: booking.time
-      }, { withCredentials: true })
+      })
       toast.success('Appointment booked!')
       setBooking({ serviceType: '', providerId: '', date: '', time: '' })
       setProviders([])
@@ -125,7 +125,7 @@ const Appointments = () => {
   const handleCancel = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this appointment?')) return
     try {
-      await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/${id}`, { withCredentials: true })
+      await api.delete(`/appointments/${id}`)
       toast.success('Appointment removed!')
       setAppointments(prev => prev.filter(appt => appt._id !== id))
     } catch (error) {
@@ -139,10 +139,10 @@ const Appointments = () => {
       return
     }
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/appointments/${id}/reschedule`, {
+      await api.put(`/appointments/${id}/reschedule`, {
         appointmentDate: rescheduleData.date,
         appointmentTime: rescheduleData.time
-      }, { withCredentials: true })
+      })
       toast.success('Appointment rescheduled!')
       setRescheduleId(null)
       setRescheduleData({ date: '', time: '' })

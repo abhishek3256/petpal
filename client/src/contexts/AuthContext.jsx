@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../api'
 
 const AuthContext = createContext()
 
@@ -21,9 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/me`, {
-        withCredentials: true
-      })
+      const response = await api.get('/auth/me')
       setUser(response.data.user)
     } catch (error) {
       setUser(null)
@@ -34,11 +32,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/login`, {
+      const response = await api.post('/auth/login', {
         email,
         password
-      }, {
-        withCredentials: true
       })
       setUser(response.data.user)
       await checkAuth() // Ensure latest user info (including image) is loaded
@@ -50,9 +46,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/register`, userData, {
-        withCredentials: true
-      })
+      const response = await api.post('/auth/register', userData)
       setUser(response.data.user)
       return { success: true }
     } catch (error) {
@@ -62,9 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/auth/logout`, {}, {
-        withCredentials: true
-      })
+      await api.post('/auth/logout', {})
     } catch (error) {
       console.error('Logout error:', error)
     } finally {

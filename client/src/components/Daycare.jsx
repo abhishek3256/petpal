@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Daycare = () => {
@@ -24,7 +24,7 @@ const Daycare = () => {
 
   const fetchDaycares = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/daycare`)
+      const response = await api.get('/daycare')
       setDaycares(response.data)
     } catch (error) {
       toast.error('Failed to fetch daycare services')
@@ -36,7 +36,7 @@ const Daycare = () => {
   const fetchAppointments = async () => {
     if (!user) return
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/appointments?type=daycare&mine=true`, { withCredentials: true })
+      const res = await api.get('/orders/appointments?type=daycare&mine=true')
       setAppointments(res.data)
     } catch { }
   }
@@ -50,13 +50,11 @@ const Daycare = () => {
     }
 
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/service`, {
+      await api.post('/orders/service', {
         serviceProviderId: selectedDaycare._id,
         serviceType: 'daycare',
         appointmentDate: bookingData.appointmentDate,
         appointmentTime: bookingData.appointmentTime
-      }, {
-        withCredentials: true
       })
 
       toast.success('Daycare service booked successfully!')

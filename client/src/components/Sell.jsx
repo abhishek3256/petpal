@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Sell = () => {
@@ -36,9 +36,7 @@ const Sell = () => {
 
     const fetchMyPets = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/my-pets`, {
-                withCredentials: true
-            })
+            const response = await api.get('/pets/my-pets')
             setPets(response.data)
         } catch (error) {
             toast.error('Failed to fetch your pets')
@@ -51,12 +49,10 @@ const Sell = () => {
         e.preventDefault()
 
         try {
-            await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets`, {
+            await api.post('/pets', {
                 ...formData,
                 age: parseInt(formData.age),
                 price: parseFloat(formData.price)
-            }, {
-                withCredentials: true
             })
 
             toast.success('Pet listed successfully!')
@@ -79,9 +75,7 @@ const Sell = () => {
     const handleDelete = async (petId) => {
         if (window.confirm('Are you sure you want to delete this pet?')) {
             try {
-                await axios.delete(`${import.meta.env.VITE_API_BASE_URL || '/api'}/pets/${petId}`, {
-                    withCredentials: true
-                })
+                await api.delete(`/pets/${petId}`)
                 toast.success('Pet deleted successfully!')
                 fetchMyPets()
             } catch (error) {

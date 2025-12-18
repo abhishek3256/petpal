@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Orders = () => {
@@ -18,8 +18,8 @@ const Orders = () => {
   const fetchOrders = async () => {
     setOrdersLoading(true)
     try {
-      let url = `${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/my-orders`
-      const res = await axios.get(url, { withCredentials: true })
+      let url = '/orders/my-orders'
+      const res = await api.get(url)
       setOrders(res.data)
     } catch (error) {
       toast.error('Failed to fetch orders')
@@ -43,7 +43,7 @@ const Orders = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     setStatusUpdating(orderId)
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/${orderId}/status`, { status: newStatus }, { withCredentials: true })
+      await api.put(`/orders/${orderId}/status`, { status: newStatus })
       toast.success('Order status updated!')
       fetchOrders()
     } catch (error) {

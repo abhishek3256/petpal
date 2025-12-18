@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { toast } from 'react-toastify'
-import axios from 'axios'
+import api from '../api'
 import { defaultImages } from '../utils/imageLinks'
 
 const Accessories = () => {
@@ -18,7 +18,7 @@ const Accessories = () => {
 
   const fetchAccessories = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories`)
+      const response = await api.get('/accessories')
       setAccessories(response.data)
     } catch (error) {
       toast.error('Failed to fetch accessories')
@@ -33,10 +33,8 @@ const Accessories = () => {
       return
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL || '/api'}/orders/accessory`, {
+      const response = await api.post('/orders/accessory', {
         accessoryId
-      }, {
-        withCredentials: true
       })
       if (response.status === 201) {
         toast.success('Accessory purchased successfully!')
@@ -83,7 +81,7 @@ const Accessories = () => {
 
   const saveEdit = async () => {
     try {
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL || '/api'}/accessories/${editingId}`, {
+      await api.put(`/accessories/${editingId}`, {
         name: editForm.name,
         description: editForm.description,
         cost: editForm.cost,
@@ -91,7 +89,7 @@ const Accessories = () => {
         animalType: editForm.animalType,
         useCase: editForm.useCase,
         isAvailable: editForm.isAvailable
-      }, { withCredentials: true })
+      })
       toast.success('Accessory updated!')
       setEditingId(null)
       setEditForm({})
