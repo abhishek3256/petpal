@@ -40,7 +40,10 @@ git commit -m "prepare for fresh deployment"
 1. Go to **Vercel Dashboard** -> **Add New ...** -> **Project**.
 2. Import your **New Repository**.
 3. **Project Name**: e.g., `pet-server-v2`.
-4. **Root Directory**: `server` (Click Edit -> select `server` folder).
+3. **Project Name**: e.g., `pet-server-v2`.
+4. **Root Directory**: `server` 
+   > **⚠️ CRITICAL STEP**: You MUST click **Edit** next to Root Directory and select the `server` folder. 
+   > If you leave this as `./` (the root), your backend will **FAIL** and just show code.
 5. **Environment Variables**:
    - `MONGODB_URI`: Your MongoDB connection string.
    - `JWT_SECRET`: Your secret key.
